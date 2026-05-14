@@ -276,10 +276,3 @@ I couldn't find that in the provided documents.
 - **WHO Situation Report 13 — COVID-19** — publicly available at who.int
 
 ---
-
-## Optional Enhancements (not implemented — next steps)
-
-- precision@k evaluation metric for retrieval quality measurement
-- Highlighted matched text passages within source documents
-- Support for Word (.docx) and Excel (.xlsx) files
-- Deployment on Streamlit Cloud for public access without local setup
