@@ -64,17 +64,23 @@ def query(question: str, vector_store: Chroma, chat_history: list) -> dict:
         search_kwargs={"k": config.TOP_K, "score_threshold": config.SCORE_THRESHOLD},
     )
 
-    # Convert chat history into LangChain message objects
+    # Build conversation history for memory
     history_messages = []
     for entry in chat_history:
         history_messages.append(HumanMessage(content=entry["question"]))
         history_messages.append(AIMessage(content=entry["answer"]))
 
-    # Prompt that includes chat history + retrieved context
+    # Improved prompt — handles numbers, stats, and data extraction better
     prompt = ChatPromptTemplate.from_messages([
-        ("system", """You are a helpful assistant that answers questions strictly based on the provided context.
-If the answer is not in the context, say 'I couldn't find that in the provided documents.'
-Do NOT make up information.
+        ("system", """You are a precise document assistant. Answer questions strictly based on the context provided below.
+
+Important rules:
+- Read the context carefully before answering
+- If the answer contains a number, statistic, or data point — state it directly and clearly
+- If the question asks "how many", "what number", or "what percentage" — look for exact figures in the context
+- If two numbers are mentioned (e.g. inside China vs outside China), distinguish them clearly
+- If the answer is genuinely not in the context, say exactly: "I couldn't find that in the provided documents."
+- Never guess, never use outside knowledge, never make up figures
 
 Context:
 {context}"""),
